@@ -1,0 +1,17 @@
+<Regions>
+<Region><id>99</id><name>Araçatuba</name></Region>
+<Region><id>98</id><name>Araraquara</name></Region>
+<Region><id>97</id><name>Assis</name></Region>
+<Region><id>96</id><name>Bauru</name></Region>
+<Region><id>95</id><name>Campinas</name></Region>
+<Region><id>94</id><name>Itapetininga</name></Region>
+<Region><id>93</id><name>Litoral Sul Paulista</name></Region>
+<Region><id>92</id><name>Macro Metropolitana Paulista</name></Region>
+<Region><id>91</id><name>Marília</name></Region>
+<Region><id>90</id><name>Metropolitana de São Paulo</name></Region>
+<Region><id>89</id><name>Piracicaba</name></Region>
+<Region><id>88</id><name>Presidente Prudente</name></Region>
+<Region><id>87</id><name>Ribeirão Preto</name></Region>
+<Region><id>86</id><name>São José do Rio Preto</name></Region>
+<Region><id>85</id><name>Vale do Paraíba Paulista</name></Region>
+</Regions>

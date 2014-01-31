@@ -1,0 +1,37 @@
+<States>
+<State><id>1</id><name>Acre</name></State>
+<State><id>2</id><name>Alagoas</name></State>
+<State><id>3</id><name>Amapá</name></State>
+<State><id>4</id><name>Amazonas</name></State>
+<State><id>5</id><name>Bahia</name></State>
+<State><id>6</id><name>Ceará</name></State>
+<State><id>7</id><name>Distrito Federal</name></State>
+<State><id>8</id><name>Espírito Santo</name></State>
+<State><id>9</id><name>Goiás</name></State>
+<State><id>10</id><name>Maranhão</name></State>
+<State><id>11</id><name>Mato Grosso</name></State>
+<State><id>12</id><name>Mato Grosso do Sul</name></State>
+<State><id>13</id><name>Minas Gerais</name></State>
+<State><id>14</id><name>Pará</name></State>
+<State><id>15</id><name>Paraíba</name></State>
+<State><id>16</id><name>Paraná</name></State>
+<State><id>17</id><name>Pernambuco</name></State>
+<State><id>18</id><name>Piauí</name></State>
+<State><id>19</id><name>Rio de Janeiro</name></State>
+<State><id>20</id><name>Rio Grande do Norte</name></State>
+<State><id>21</id><name>Rio Grande do Sul</name></State>
+<State><id>22</id><name>Rondônia</name></State>
+<State><id>23</id><name>Roraima</name></State>
+<State><id>24</id><name>Santa Catarina</name></State>
+<State><id>25</id><name>São Paulo</name></State>
+<State><id>26</id><name>Sergipe</name></State>
+<State><id>27</id><name>Tocantins</name></State>
+</States>
+
+
+
+
+
+
+
+

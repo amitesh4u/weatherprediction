@@ -1,0 +1,127 @@
+TODO
+- Update registration code
+- Write forget pwd code
+- Fetch and update status from DB (optional)
+- Update JSP for 'Add/Remove rows'
+
+
+
+
+
+
+
+-- Table: users
+
+-- DROP TABLE users;
+
+CREATE TABLE users
+(
+  user_id bigserial NOT NULL,
+  email_id character varying(100) NOT NULL,
+  f_name character varying(50) NOT NULL,
+  l_name character varying(50) NOT NULL,
+  usr_pwd character varying(32) NOT NULL,
+  cntry_a2 character(2),
+  ph_cntry_cd character(3),
+  ph_no character(10),
+  usr_cat_cd character(3),
+  hnt_ques_cd integer NOT NULL DEFAULT (-1),
+  hnt_ans character varying(30),
+  reg_date timestamp with time zone NOT NULL DEFAULT now(),
+  is_active character(1) NOT NULL DEFAULT 'N'::bpchar,
+  CONSTRAINT users_pkey PRIMARY KEY (user_id),
+  CONSTRAINT emailid_ukey UNIQUE (email_id)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE users
+  OWNER TO weatherprediction;
+
+-- Default user
+INSERT INTO users(
+            email_id, f_name, l_name, usr_pwd, is_active)
+    VALUES ('test@test.com', 'f_name', 'l_name', '4', 'Y');            
+
+
+-- Table: simulation_type
+
+-- DROP TABLE simulation_type;
+
+CREATE TABLE simulation_type
+(
+  sim_type character varying NOT NULL,
+  sim_desc character varying,
+  CONSTRAINT simtype_pk PRIMARY KEY (sim_type)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE simulation_type
+  OWNER TO weatherprediction;
+  
+INSERT INTO simulation_type(
+            sim_type, sim_desc)
+    VALUES ('cmh', 'Crop Model (Historical Yield)');
+
+INSERT INTO simulation_type(
+            sim_type, sim_desc)
+    VALUES ('cmnhmm', 'Crop Model (NHMM Predictions)');
+
+INSERT INTO simulation_type(
+            sim_type, sim_desc)
+    VALUES ('rmnhmm', 'RainFall Model (NHMM predictions)');
+
+	
+-- Table: simulation
+
+-- DROP TABLE simulation;
+
+CREATE TABLE simulation
+(
+  sim_id bigserial NOT NULL,
+  user_id bigserial NOT NULL,
+  sim_num integer NOT NULL,
+  sim_type character varying NOT NULL,
+  start_date date NOT NULL DEFAULT ('now'::text)::date,
+  completion_date date,
+  started_on timestamp with time zone NOT NULL DEFAULT now(),
+  completed_on timestamp with time zone,
+  status character varying NOT NULL,
+  input_param character varying,
+  output character varying,
+  addtional_msg character varying,
+  CONSTRAINT simulation_pk PRIMARY KEY (sim_id),
+  CONSTRAINT simulationtype_fk FOREIGN KEY (sim_type)
+      REFERENCES simulation_type (sim_type) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT userid_fk FOREIGN KEY (user_id)
+      REFERENCES users (user_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE simulation
+  OWNER TO weatherprediction;
+
+
+  
+-- Table: simulation_status
+
+-- DROP TABLE simulation_status;
+
+CREATE TABLE simulation_status
+(
+  sim_id bigserial NOT NULL,
+  sim_stage character varying NOT NULL,
+  status_at timestamp with time zone NOT NULL,
+  CONSTRAINT simstatusid_fk FOREIGN KEY (sim_id)
+      REFERENCES simulation (sim_id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE simulation_status
+  OWNER TO weatherprediction;
