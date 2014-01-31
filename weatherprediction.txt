@@ -5,10 +5,25 @@ TODO
 - Update JSP for 'Add/Remove rows'
 
 
+-- Database: weatherprediction
+
+-- DROP DATABASE weatherprediction;
+
+CREATE DATABASE weatherprediction
+  WITH OWNER = weatherprediction
+       ENCODING = 'UTF8'
+       TABLESPACE = pg_default
+       LC_COLLATE = 'English_United States.1252'
+       LC_CTYPE = 'English_United States.1252'
+       CONNECTION LIMIT = -1;
 
 
+-- Role: weatherprediction
 
+-- DROP ROLE weatherprediction;
 
+CREATE ROLE weatherprediction LOGIN
+  NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
 
 -- Table: users
 
