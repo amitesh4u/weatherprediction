@@ -173,9 +173,9 @@
 			color="green">Crop Model Simulation</font>
 	</div>
 	<div style="height: 10px"></div>
-	<div id="container" style="min-width: 1280px; height: 450px;width:100%">
+	<div id="container" style="min-width: 1200px; height: 450px;width:100%">
 		<div id="left" class="roundedDiv"
-			style="float: left; min-width: 660px; width=100%; padding: 0px; margin-left: 5px">
+			style="float: left; min-width: 650px; width=100%; padding: 0px; margin-left: 5px">
 			<form method="post" action="CropModel" name="DODSForm">
 				<ul style='list-style-type: none;margin-left:-10px'>
 					<li><label><font size="3em" style="font-weight: bold"
@@ -335,7 +335,7 @@
 			</form>
 		</div>
 		<div id="right" class="roundedDiv"
-			style="float: right; padding: 0px; margin-right: 5px;min-width:620px;">
+			style="float: right; padding: 0px; margin-right: 5px;min-width:550px;">
 			<form method="post" action="SimulationReport" name="SimReportForm">
 				<ul style='list-style-type: none;'>
 					<li><label><font size="3em" style="font-weight: bold"

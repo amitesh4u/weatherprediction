@@ -211,7 +211,7 @@ public class CropModelController {
 	    			for(Simulation simulation : simulationDetailsByUser){
 	    				sb.append("<simulation>");
 	    				sb.append("<id>" + simulation.getSimId() + "</id>");
-	    				sb.append("<date>" + DateUtil.convertDateToString(simulation.getStartDate(),"dd-MM-yy") + "</date>");
+	    				sb.append("<date>" + DateUtil.convertDateToString(simulation.getStartDate(),"dd-MMM-yy") + "</date>");
 	    				sb.append("<num>" + simulation.getSimNum() + "</num>");
 	    				sb.append("<type>" + simulation.getSimDesc() + "</type>");
 	    				sb.append("<status>" + simulation.getStatus() + "</status>");

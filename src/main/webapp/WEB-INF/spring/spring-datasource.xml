@@ -10,6 +10,9 @@
         <property name="url" value="jdbc:postgresql://localhost:5432/weatherprediction" />
         <property name="username" value="weatherprediction" />
 		<property name="password" value="wp_db_pwd" />
+<!--         <property name="url" value="jdbc:postgresql://irione:5432/arindam" /> -->
+<!--         <property name="username" value="arindam" /> -->
+<!-- 		<property name="password" value="xi-ty-wa" /> -->
 	</bean>
 
 </beans>

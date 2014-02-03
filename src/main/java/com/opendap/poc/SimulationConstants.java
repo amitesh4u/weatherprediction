@@ -3,6 +3,8 @@
  */
 package com.opendap.poc;
 
+import java.io.File;
+
 /**
  * @author I
  *
@@ -23,5 +25,5 @@ public class SimulationConstants {
 	
 	public static final String DATA_FOLDER = "Data";
 	
-	public static final String BELUGA_PATH = "E:/Topol/beluga/data/arindam/CropModelOutput/";
+	public static final String BELUGA_PATH = "E:" + File.separator + "Topol" + File.separator + "beluga" + File.separator + "data" + File.separator + "arindam" + File.separator + "CropModelOutput" + File.separator;
 }

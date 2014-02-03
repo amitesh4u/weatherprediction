@@ -625,7 +625,7 @@ function parseSimulationReportResponseXML(xmlResponse) {
 		simulationNodes = rootNode.getElementsByTagName('simulations')[0].getElementsByTagName('simulation');
 		//alert("Number of simulationNodes: " + simulationNodes.length);
 		if (simulationNodes.length > 0) {
-			str = '<table width="100%" border="0" style="margin-left:-15px;cell-spacing:5px;cell-padding:5px"><thead><tr><th>Date</th><th align=center>Sim#</th><th align=center>Type</th><th>Status</th><th>Output</tr><tbody>';
+			str = '<table width="100%" border="0" style="margin-left:-20px;cell-spacing:5px;cell-padding:5px"><thead><tr><th>Date</th><th align=center>Sim#</th><th align=center>Type</th><th>Status</th><th>Output</tr><tbody>';
 			str = str + '<tr><td colspan="5"><div style="height: 20px"></td></tr>';
 			for ( var i = 0; i < simulationNodes.length; i++) {
 				simulation = simulationNodes[i];
@@ -636,7 +636,7 @@ function parseSimulationReportResponseXML(xmlResponse) {
 				status = simulation.getElementsByTagName('status')[0].firstChild.nodeValue;
 				input = simulation.getElementsByTagName('input')[0].firstChild.nodeValue;
 				
-				str = str + '<tr><td>' + date + '</td><td style="min-width:50px;" align=center><b>' + num + '</b></td><td>' + type + '</td>';
+				str = str + '<tr><td>' + date + '</td><td style="min-width:30px;" align=center><b>' + num + '</b></td><td>' + type + '</td>';
 				if(status == 'FAILED'){
 					str = str + '<td><font color="red" style="font-weight:bold">' + status + '</font></td><td>None</td></tr>';
 				}else{
