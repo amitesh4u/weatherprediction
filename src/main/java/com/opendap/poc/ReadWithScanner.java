@@ -40,7 +40,7 @@ public final class ReadWithScanner {
 			  else if (SoilName.equals("Loamy Sand")) SoilType = "LoamySand";
 		      else SoilType = SoilName;
 		      File writeFile = new File(pathname,"Mo"+"-"+lat+"-"+lon+"-"+i+"-"+ SoilType+".INP");
-		      System.out.println("Scanner:  " + pathname+"Mo"+"-"+lat+"-"+lon+"-"+i+"-"+ SoilType+".INP");
+		      System.out.println("Scanner:  " + pathname+File.separator + "Mo"+"-"+lat+"-"+lon+"-"+i+"-"+ SoilType+".INP");
 		      Writer output = new BufferedWriter(new FileWriter(writeFile));		      		      
 		      //***************This part writes the 1st part of the file ****//
 		      

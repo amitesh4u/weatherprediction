@@ -25,21 +25,6 @@ import ucar.nc2.dataset.NetcdfDataset;
 
 public class ReadHistoricalRainfall {
 	
-	private String folder = null;
-	public ReadHistoricalRainfall(){
-		try {
-			Properties properties = new Properties();
-	        File file = new File(this.getClass().getResource("/ServerContentDownloader.properties").getFile());
-			FileInputStream fis = new FileInputStream(file);
-			properties.load(fis);
-			folder = properties.getProperty("folder");
-			System.out.println("Folder : " + folder);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	public Vector ReadCDFFile(String folderPath2,String file)
 	{
 		//String filename = pathname +"/"+filename;
@@ -63,19 +48,22 @@ public class ReadHistoricalRainfall {
 	}
 	
 	//public void makeCropInputFiles(String folderPath2,double Lat,double Lon)
-	public void makeCropInputFiles(final long userId, final int simNum, final long simId, String Path, long CountryNo, String DistrictID,
-			String Crop, String CropSeason, String GCM, final SimulationHelper simulationHelper)
+	public void makeCropInputFiles(final SimulationArguments simulationArguments)
 	{
 		
+		long simId = simulationArguments.getSimId();
 		/*Get the rainfall co-ordinates for the dataset */
-		SimDetailsVO simDetailsVO = CropModelController.getSimDetailsMap().get(simId); 
+		SimDetailsVO simDetailsVO = CropModelController.getSimDetailsMap().get(simId ); 
 		simDetailsVO.setStatusMessage(simDetailsVO.getStatusMessage().append(" -Extracting Grid Co-ordinates&lt;/br&gt;"));
+		SimulationHelper simulationHelper = simulationArguments.getSimulationHelper();
 		simulationHelper.setSimulationStatus(simId, "Extracting Grid Co-ordinates", DateUtil.getCurrentDateWithLocalTimeZone());
 		
 		GridCoordinates grid = new GridCoordinates();
-		String folderPath = folder + File.separator + userId + File.separator + Path + File.separator + simNum + File.separator + CountryNo ;
-	    //String folderPath = "Data" + "/" + Path;
-		String filepath = folderPath + "/"+DistrictID;
+		String folderPath = simulationArguments.getFileStructure() ;
+	    String districtID = simulationArguments.getDistrictID();
+	    String crop = simulationArguments.getCrop();
+		//String folderPath = "Data" + "/" + Path;
+		String filepath = folderPath + File.separator + districtID ;
 	    Vector vecGrid = grid.Coordinates(filepath+"/GridCoordinates.tsv");
 		Vector TminNR = new Vector();
 		Vector TminR = new Vector();
@@ -259,8 +247,8 @@ public class ReadHistoricalRainfall {
 				    	   System.out.println(vSoilType.get(iSoil + 1).toString());
 				    	   System.out.println(Soil.toString());
 				    	   
-				    	  if(!Soil.equals(""))
-				    		  rds.WriteCropInput(Soil, filepath, vLat, vLon, i,WeatherFileName,year,century,Crop);
+						if(!Soil.equals(""))
+				    		  rds.WriteCropInput(Soil, filepath, vLat, vLon, i,WeatherFileName,year,century,crop );
 				 
 				    	  //convert the soil in a smaller format to be read by the cropmodel
 				    	  if (Soil.equals("Silty Clay")) Soil = "SiltyClay";
@@ -275,8 +263,9 @@ public class ReadHistoricalRainfall {
 							    	   
 				    	  String inputfile = "Mo-"+vLat+"-"+vLon+"-"+i+"-"+Soil+".INP";
 				    	  SimulateCrops sim = new SimulateCrops();
-				    	  System.out.println(sim.CallCropModel(inputfile, filepath, DistrictID, Crop));
-				    	  vSoilSimulation.add(sim.CallCropModel(inputfile, filepath, DistrictID, Crop));
+				    	  String callCropModel = sim.callCropModel(inputfile, filepath);
+				    	  System.out.println(callCropModel);
+				    	  vSoilSimulation.add(callCropModel);
 			   	    	}//end of the soil loop 
 			    	    vYearSimulations.add(vSoilSimulation);
 						/********************Run the simulations for each year (end)********************/
@@ -312,18 +301,19 @@ public class ReadHistoricalRainfall {
 		    		    		else {year =  "0" + Integer.toString(k-50);century = "20";}
 		    		    		
 		    		    	   Vector c = (Vector) b.get(k);//vCropSimulations
-		     			   for(int l =0; l < c.size();l++)
-		    	    		   {
-		     				   String soilType = vSoilType.get(l + 1).toString().substring(0,4);
-		     				   //System.out.println(c.get(l));
-		     				   String str = Latitude + "\t" + Longitude + "\t"+ i +"\t"+ century + year + "\t"+soilType+ "\t"+ c.get(l).toString();
-		     				   simDetailsVO.setStatusMessage(simDetailsVO.getStatusMessage().append(str + "&lt;/br&gt;") );
-		     				   simulationHelper.setSimulationStatus(simId, str, DateUtil.getCurrentDateWithLocalTimeZone());
-		     				   System.out.println( str); 
-		    	    		   output.write( str);
-		    	    		   output.write("\n");
-		    	    		   output.flush();
-		    	    		   }
+			     			   for(int l =0; l < c.size();l++)
+			     			    {
+			     				   String soilType = vSoilType.get(l + 1).toString().substring(0,4);
+			     				   //System.out.println(c.get(l));
+			     				   String str = Latitude + "\t" + Longitude + "\t"+ i +"\t"+ century + year + "\t"+soilType+ "\t"+ c.get(l).toString();
+			     				   System.out.println("Str for l:" + l + " | " + str);
+			     				   //simDetailsVO.setStatusMessage(simDetailsVO.getStatusMessage().append(str + "&lt;/br&gt;") );
+			     				   //simulationHelper.setSimulationStatus(simId, str, DateUtil.getCurrentDateWithLocalTimeZone());
+			     				   System.out.println( str); 
+			    	    		   output.write( str);
+			    	    		   output.write("\n");
+			    	    		   output.flush();
+			    	    	   }
 		     		   }
 		        }
 		     	   

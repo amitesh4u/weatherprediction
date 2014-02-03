@@ -66,21 +66,23 @@ public class ReadHistoricalRainfall_Brazil {
 	}
 	
 	//public void makeCropInputFiles(String folderPath2,double Lat,double Lon)
-	public void makeCropInputFiles(final long userId, final int simNum, final long simId, String Path, long CountryNo, String DistrictID, 
-			String Crop, String CropSeason, String GCM, final SimulationHelper simulationHelper)
+	public void makeCropInputFiles(final SimulationArguments simulationArguments)
 	{
 		
-		
+		long simId = simulationArguments.getSimId();
 		/**************Get the rainfall co-ordinates for the dataset******************/	
 	     /*rainParameters = rnhmm.WriteRain(filePath,pathname);
 		 NHMMrain.add(rainParameters);(this method could be called here)*/
 		SimDetailsVO simDetailsVO = CropModelController.getSimDetailsMap().get(simId); 
 		simDetailsVO.setStatusMessage(simDetailsVO.getStatusMessage().append(" -Extracting Grid Co-ordinates&lt;/br&gt;"));
+		SimulationHelper simulationHelper = simulationArguments.getSimulationHelper();
 		simulationHelper.setSimulationStatus(simId, "Extracting Grid Co-ordinates", DateUtil.getCurrentDateWithLocalTimeZone());
 		GridCoordinates grid = new GridCoordinates();
-		String folderPath = folder + File.separator + userId + File.separator + Path + File.separator + simNum + File.separator + CountryNo ;
+		String folderPath = simulationArguments.getFileStructure() ;
+	    String districtID = simulationArguments.getDistrictID();
+	    String crop = simulationArguments.getCrop();
 	    //String folderPath = "Data" + "/" + Path;
-		String filepath = folderPath + "/"+DistrictID;
+		String filepath = folderPath + File.separator+districtID;
 	    Vector vecGrid = grid.Coordinates(filepath+"/GridCoordinates.tsv");
 		Vector TminNR = new Vector();
 		Vector TminR = new Vector();
@@ -251,7 +253,7 @@ public class ReadHistoricalRainfall_Brazil {
 						    	   System.out.println(Soil.toString());
 						    	   
 						    	  if(!Soil.equals(""))
-						    		  rds.WriteCropInput(Soil, filepath, vLat, vLon, i,WeatherFileName,year,century,Crop);
+						    		  rds.WriteCropInput(Soil, filepath, vLat, vLon, i,WeatherFileName,year,century,crop);
 						 
 						    	  //convert the soil in a smaller format to be read by the cropmodel
 						    	  if (Soil.equals("Silty Clay")) Soil = "SiltyClay";
@@ -266,8 +268,9 @@ public class ReadHistoricalRainfall_Brazil {
 									    	   
 						    	  String inputfile = "Mo-"+vLat+"-"+vLon+"-"+i+"-"+Soil+".INP";
 						    	  SimulateCrops sim = new SimulateCrops();
-						    	  System.out.println(sim.CallCropModel(inputfile, filepath, DistrictID, Crop));
-						    	  vSoilSimulation.add(sim.CallCropModel(inputfile, filepath, DistrictID, Crop));
+						    	  String callCropModel = sim.callCropModel(inputfile, filepath);
+						    	  System.out.println(callCropModel);
+						    	  vSoilSimulation.add(callCropModel);
 					   	    	}//end of the soil loop 
 					    	    vYearSimulations.add(vSoilSimulation);
 					/********************Run the simulations for each year (end)********************/

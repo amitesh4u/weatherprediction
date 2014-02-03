@@ -47,10 +47,13 @@ public class WriteSimNetCDF {
 	}
 
  //public static void main(String args[]) throws Exception
-	public void WriteCDFFile(String pathname, String DistrictID, String Crop) throws IOException
+	public void writeCDFFile(final SimulationArguments simulationArguments) throws IOException
  {
 	// try{
-		 File inputFile = new File("Data/"+ pathname + "/"+DistrictID+"/SimulationResults.tsv");
+		String districtId = simulationArguments.getDistrictID();
+		String crop = simulationArguments.getCrop();
+		 String fileStructure = simulationArguments.getFileStructure();
+		File inputFile = new File(fileStructure + File.separator + districtId + File.separator + "SimulationResults.tsv");
 		 BufferedReader input =  new BufferedReader(new FileReader(inputFile));
 		 String line = null; //not declared within while loop  
 		 Vector vLat = new Vector();
@@ -111,9 +114,9 @@ public class WriteSimNetCDF {
        
        // Create the file.
        
-         File dir = new File("/beluga/data/arindam/CropModelOutput/"+DistrictID);
+         File dir = new File(SimulationConstants.BELUGA_PATH + simulationArguments.getRelativeFileStructure());
 		 dir.mkdirs();
-	     String filename = "/beluga/data/arindam/CropModelOutput/"+DistrictID+"/sim_cropmodel_"+Crop+".nc";
+	     String filename = SimulationConstants.BELUGA_PATH + simulationArguments.getRelativeFileStructure() + File.separator + "sim_cropmodel_" + crop +".nc";
 	     NetcdfFileWriteable dataFile = null;
 	
 		try {

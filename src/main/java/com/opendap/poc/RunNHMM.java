@@ -1,19 +1,15 @@
 package com.opendap.poc;
 
-import java.io.*; 
-import java.util.Properties;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 public class RunNHMM  {
 
-	public RunNHMM (){}
-	
-	public void RunNHMMModel (String pathname, String DistrictID)
+	public void runNHMMModel (final SimulationArguments simulationArguments) throws IOException
 	{
-		try{ 
-			Properties properties = new Properties();
-			// Read the properties file
-			File file = new File("Data/2011-08-08/187");
-			//System.out.println("here");
+			File file = new File(simulationArguments.getFileStructure() + File.separator + simulationArguments.getDistrictID());
 			//File file = new File("/Users/Arindam/Desktop/HMMTool-2.1/c++");
 			//File file = new File("Data/"+pathname+"/"+DistrictID);
 			Process p=Runtime.getRuntime().exec("./mvnhmm  ./lrn_nhmm_ind_delexp_params.txt",null,file);
@@ -38,12 +34,5 @@ public class RunNHMM  {
 				lineq=readerq.readLine(); 
 			}
 		} 
-		catch(IOException e1) {e1.printStackTrace();} 
-		//catch(InterruptedException e2) {} 
-		System.out.println("Done"); 
-		//return filename;
-		
-	}
-	
 }
 

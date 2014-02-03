@@ -20,6 +20,8 @@ import org.xml.sax.helpers.ParserFactory;
 
 
 
+
+
 import java.io.File;
 import java.util.*;
 
@@ -132,7 +134,7 @@ public class ServerContentDownloaderBrazil {
 		// Read the properties file
 		//File file = new File("ServerContentDownloader.properties");
 		//File file = new File("/ServerContentDownloader_Brazil.properties");
-		File file = new File(this.getClass().getResource("/ServerContentDownloader_Brazil.properties").getFile());
+		File file = new File(this.getClass().getResource("/ServerContentDownloader_2.properties").getFile());
 		FileInputStream fis = new FileInputStream(file);
 		properties.load(fis);
 
@@ -196,22 +198,28 @@ public class ServerContentDownloaderBrazil {
 	 *
 	 *
 	 */
-	public void createAndSaveUrl(final long userId, final int simNum, final long simId, String Path, long CountryNo, String DistrictID, 
-			String Crop, String CropSeason, String GCM, final SimulationHelper simulationHelper){
+	public void createAndSaveUrl(final SimulationArguments simulationArguments){
 
 		/* build connection to the database */
 		try	{
 			//SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			String folderPath = folder + File.separator + userId + File.separator + Path + File.separator + simNum + File.separator + CountryNo ;
+			//String folderPath = folder + File.separator + userId + File.separator + Path + File.separator + simNum + File.separator + CountryNo ;
+			String folderPath = simulationArguments.getFileStructure();
+			SimulationHelper simulationHelper = simulationArguments.getSimulationHelper();
+			long simId = simulationArguments.getSimId();
+			String crop = simulationArguments.getCrop();
+			//String folderPath = folder + "/" + simpleDateFormat.format(new Date());
 			File dir = new File(folderPath);
 			dir.mkdirs();
 			int id = 1;
-			File aFile = new File("DistrictCoordinates.txt");
+			//String DistrictID ="188";
+			File aFile = new File(this.getClass().getResource("/DistrictCoordinates.txt").getFile());
+			
 			String LatLong = "";
 			/**************Get Grid coordinates******************/
 			double Lon = 0.0;
 			double Lat = 0.0;
-			String filePath = folderPath+"/"+DistrictID;
+			String filePath = folderPath+File.separator+ simulationArguments.getDistrictID();
 			File dir2 = new File(filePath);
 			dir2.mkdirs();
 			String filename = "";
@@ -336,21 +344,21 @@ public class ServerContentDownloaderBrazil {
 			modelINP.WriteInputFiles(filePath, "1-21.WTH");
 			simDetailsVO.setStatusMessage(simDetailsVO.getStatusMessage().append(" -Downloading DSSAT CROP FILES&lt;/br&gt;"));
 			simulationHelper.setSimulationStatus(simId, "Downloading DSSAT CROP FILES", DateUtil.getCurrentDateWithLocalTimeZone());
-			if (Crop.equalsIgnoreCase("Sorghum"))
+			if (crop.equalsIgnoreCase("Sorghum"))
 			{
 				modelINP.WriteInputFiles(filePath, "SGCER040.CUL");
 				modelINP.WriteInputFiles(filePath, "SGCER040.ECO");
 				modelINP.WriteInputFiles(filePath, "SGCER040.SPE");
 				modelINP.WriteInputFiles(filePath, "DSSAT40_Sorghum.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Maize"))
+			else if (crop.equalsIgnoreCase("Maize"))
 			{
 				modelINP.WriteInputFiles(filePath, "MZCER.CUL");
 				modelINP.WriteInputFiles(filePath, "MZCER.ECO");
 				modelINP.WriteInputFiles(filePath, "MZCER.SPE");
 				modelINP.WriteInputFiles(filePath, "DSSAT40_Maize.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Soyabean"))
+			else if (crop.equalsIgnoreCase("Soyabean"))
 			{
 				//modelINP.WriteInputFiles(filePath, "MZCER.CUL");
 				//modelINP.WriteInputFiles(filePath, "MZCER.ECO");

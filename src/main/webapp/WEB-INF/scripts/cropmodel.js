@@ -1,3 +1,4 @@
+//<![CDATA[
 /*
    Provide the XMLHttpRequest constructor for IE 5.x-6.x:
    Other browsers (including IE 7.x-8.x) do not redefine
@@ -624,7 +625,7 @@ function parseSimulationReportResponseXML(xmlResponse) {
 		simulationNodes = rootNode.getElementsByTagName('simulations')[0].getElementsByTagName('simulation');
 		//alert("Number of simulationNodes: " + simulationNodes.length);
 		if (simulationNodes.length > 0) {
-			str = '<table width="100%" border="0" style="margin-left:-15px;cell-spacing:5px;cell-padding:5px"><thead><tr><th>Sim#</th><th>Date</th><th>Type</th><th>Status</th><th>Output</tr><tbody>';
+			str = '<table width="100%" border="0" style="margin-left:-15px;cell-spacing:5px;cell-padding:5px"><thead><tr><th>Date</th><th align=center>Sim#</th><th align=center>Type</th><th>Status</th><th>Output</tr><tbody>';
 			str = str + '<tr><td colspan="5"><div style="height: 20px"></td></tr>';
 			for ( var i = 0; i < simulationNodes.length; i++) {
 				simulation = simulationNodes[i];
@@ -633,30 +634,34 @@ function parseSimulationReportResponseXML(xmlResponse) {
 				num = simulation.getElementsByTagName('num')[0].firstChild.nodeValue;
 				type = simulation.getElementsByTagName('type')[0].firstChild.nodeValue;
 				status = simulation.getElementsByTagName('status')[0].firstChild.nodeValue;
-				if(status == 'FAILED'){
-					str = str + '<tr><td><b>' + num + '</b></td><td>' + date + '</td><td>' + type + '</td><td><font color="red" style="font-weight:bold">' + status 
-					  + '</font></td><td>None</td></tr>';
-				}else{
-					str = str + '<tr><td><b>' + num + '</b></td><td>' + date + '</td><td>' + type + '</td><td><font color="green" style="font-weight:bold">' + status 
-						  + '</font></td><td><a href="#" id="link' + id + '" onclick="javascript:showHideReport(\'' + id + '\');">Show Output</a></td>'
-						  + '</tr><tr><td colspan="2"></td><td colspan="3"><div class="roundedDiv" id="report' + id + '" style="display:none;background-color:#BDD799">';
-				}
-				linkNodes = simulation.getElementsByTagName('links')[0].getElementsByTagName('link');
-				//alert("Number of linkNodes: " + linkNodes.length);
-				if (linkNodes.length > 0) {
-					str = str + "<ul>";
-					var linkUrl;
-					var linkText;
-					for ( var j = 0; j < linkNodes.length; j++) {
-						link = linkNodes[j];
-						linkUrl = link.getElementsByTagName('linkUrl')[0].firstChild.nodeValue;
-						linkText = link.getElementsByTagName('linkText')[0].firstChild.nodeValue;
-						str = str + "<li><a href='" + linkUrl + "' target='_blank'>" + linkText + "</a></li>";
-					}
-					str = str + "</ul>";
-				}
+				input = simulation.getElementsByTagName('input')[0].firstChild.nodeValue;
 				
-				str = str + '</div></td></tr>';
+				str = str + '<tr><td>' + date + '</td><td style="min-width:50px;" align=center><b>' + num + '</b></td><td>' + type + '</td>';
+				if(status == 'FAILED'){
+					str = str + '<td><font color="red" style="font-weight:bold">' + status + '</font></td><td>None</td></tr>';
+				}else{
+					str = str + '<td><font color="green" style="font-weight:bold">' + status + '</font></td><td><a href="#" id="link' + id + '" onclick="javascript:showHideReport(\'' + id + '\');">Show Output</a></td>'
+						  + '</tr><tr><td colspan="2"></td><td colspan="3"><div title="Input/Output" id="report' + id + '" style="display:none;">'; //BDD799 //background-color:#EBF3E8
+					str = str + "<h3>Input</h3>";
+					str = str + input;
+					str = str + "<h3>Output</h3>";
+					linkNodes = simulation.getElementsByTagName('links')[0].getElementsByTagName('link');
+					//alert("Number of linkNodes: " + linkNodes.length);
+					if (linkNodes.length > 0) {
+						str = str + "<ul>";
+						var linkUrl;
+						var linkText;
+						for ( var j = 0; j < linkNodes.length; j++) {
+							link = linkNodes[j];
+							linkUrl = link.getElementsByTagName('linkUrl')[0].firstChild.nodeValue;
+							linkText = link.getElementsByTagName('linkText')[0].firstChild.nodeValue;
+							str = str + "<li><a href='" + linkUrl + "' target='_blank'>" + linkText + "</a></li>";
+						}
+						str = str + "</ul>";
+					}
+					
+					str = str + '</div></td></tr>';
+				}
 				str = str + '<tr><td colspan="5"><div style="height: 20px"></td></tr>';
 			}
 			str = str + '</tbody></table>';
@@ -676,17 +681,33 @@ function showSimulationReportOutput(data) {
 	}
 }
 
+// min-width:700px;height:500px;overflow:auto;
 function showHideReport(id){
-	linkId = document.getElementById("link" + id);
-	reportId = document.getElementById("report" + id);
 	
-	if(reportId.style.display == 'block'){
-		reportId.style.display = 'none';
-		linkId.innerText = 'Show Output';
-	} else {
-    	 reportId.style.display = 'block';
-    	 linkId.innerText = 'Hide Output';
-	}
+	$( "#report" + id ).dialog({
+		  //resizable: true,
+		  minWidth: 700,
+		  maxWidth:1000,
+		  maxHeight:500,
+		  scrollTop:0,
+	      modal: true,
+	      buttons: {
+	        Ok: function() {
+	          $( this ).dialog( "close" );
+	        }
+	      }
+	    });
+	
+//	linkId = document.getElementById("link" + id);
+//	reportId = document.getElementById("report" + id);
+//	
+//	if(reportId.style.display == 'block'){
+//		reportId.style.display = 'none';
+//		linkId.innerText = 'Show Output';
+//	} else {
+//    	 reportId.style.display = 'block';
+//    	 linkId.innerText = 'Hide Output';
+//	}
 }
 
 function showHideInputParam(simCode){
@@ -701,3 +722,6 @@ function showHideInputParam(simCode){
 		inParamlinkId.innerText = '(Hide Input Parameteres)';
 	}
 }
+
+
+//]]>

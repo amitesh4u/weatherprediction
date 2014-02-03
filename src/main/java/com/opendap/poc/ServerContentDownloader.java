@@ -19,6 +19,9 @@ import org.xml.sax.helpers.ParserFactory;
 
 
 
+
+
+
 import java.io.File;
 import java.util.*;
 
@@ -95,7 +98,7 @@ public class ServerContentDownloader {
 
 	private String proxyPort = null;
 
-	private String folder = null;
+	//private String folder = null;
 
 	/**
 	 * @throws IOException
@@ -130,7 +133,7 @@ public class ServerContentDownloader {
 		Properties properties = new Properties();
 		// Read the properties file
 		//File file = new File("ServerContentDownloader.properties");
-		File file = new File(this.getClass().getResource("/ServerContentDownloader.properties").getFile());
+		File file = new File(this.getClass().getResource("/ServerContentDownloader_1.properties").getFile());
 		FileInputStream fis = new FileInputStream(file);
 		properties.load(fis);
 		useProxy = Boolean.parseBoolean(properties.getProperty("UseProxy"));
@@ -178,8 +181,8 @@ public class ServerContentDownloader {
 		
 
 		//Read folder name
-		folder = properties.getProperty("folder");
-		System.out.println("Folder : " + folder);
+		//folder = properties.getProperty("folder");
+		//System.out.println("Folder : " + folder);
 
 		System.out.println("\n************************************************\n");
 
@@ -191,12 +194,13 @@ public class ServerContentDownloader {
 	 *
 	 *
 	 */
-	public void createAndSaveUrl(final long userId, final int simNum, final long simId, String Path, long CountryNo, String DistrictID, String Crop, String CropSeason, String GCM, final SimulationHelper simulationHelper){
+	public void createAndSaveUrl(final SimulationArguments simulationArguments){
 
 		/* build connection to the database */
 		try	{
 			//SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			String folderPath = folder + File.separator + userId + File.separator + Path + File.separator + simNum + File.separator + CountryNo ;
+			//String folderPath = folder + File.separator + userId + File.separator + Path + File.separator + simNum + File.separator + CountryNo ;
+			String folderPath = simulationArguments.getFileStructure();
 			//String folderPath = folder + "/" + simpleDateFormat.format(new Date());
 			File dir = new File(folderPath);
 			dir.mkdirs();
@@ -218,6 +222,7 @@ public class ServerContentDownloader {
  			double GCMLonMax = 0.0;
  			Vector LatVec = new Vector();
 				Vector LonVec = new Vector();
+			String districtID = simulationArguments.getDistrictID();
 			try	{
 				 BufferedReader input =  new BufferedReader(new FileReader(aFile));
 				 String line = null; //not declared within while loop
@@ -225,7 +230,7 @@ public class ServerContentDownloader {
 				    	 StringTokenizer sta = new StringTokenizer(line.toString(),"@");
 			    		 //sta.nextToken();
 			    		    
-				    	 if(sta.nextToken().toString().equals(DistrictID))
+				    	 if(sta.nextToken().toString().equals(districtID ))
 				          {  	
 				    		    sta.nextToken();
 				    		 	//System.out.println(line);
@@ -266,14 +271,14 @@ public class ServerContentDownloader {
 				     
 				    	 
 			    			
-    		int dist = Integer.parseInt(DistrictID);
+    		int dist = Integer.parseInt(districtID);
 			id = dist;
 			//the id in database is 1 more than the normal id
 			id++;
 			/**************Get Grid coordinates******************/
 			double Lon = 0.0;
 			double Lat = 0.0;
-			String filePath = folderPath+"/"+DistrictID;
+			String filePath = folderPath + File.separator + districtID;
 			File dir2 = new File(filePath);
 			dir2.mkdirs();
 			String filename = "";
@@ -281,10 +286,12 @@ public class ServerContentDownloader {
 			String pathname = "";
 			filename = filePath + "/GridCoordinates.tsv";
 			 
-		    /*********** Get the soil parameters from the Datalibrary **************/
-			SimDetailsVO simDetailsVO = CropModelController.getSimDetailsMap().get(simId);
+		    long simId = simulationArguments.getSimId();
+			/*********** Get the soil parameters from the Datalibrary **************/
+			SimDetailsVO simDetailsVO = CropModelController.getSimDetailsMap().get(simId );
 			simDetailsVO.setStatusMessage(simDetailsVO.getStatusMessage().append(" -Downloading Soil paramters&lt;/br&gt;"));
-			simulationHelper.setSimulationStatus(simId, "Downloading Soil paramters", DateUtil.getCurrentDateWithLocalTimeZone());
+			SimulationHelper simulationHelper = simulationArguments.getSimulationHelper();
+			simulationHelper .setSimulationStatus(simId, "Downloading Soil paramters", DateUtil.getCurrentDateWithLocalTimeZone());
 			
 			filename = filePath+ "/soil.cdf";
 			urlString = servletURLPattern_soil.replace("{{minLat}}", String.valueOf(minLat))
@@ -470,88 +477,89 @@ public class ServerContentDownloader {
 			modelINP.WriteInputFiles(filePath, "1-21.WTH");
 			simDetailsVO.setStatusMessage(simDetailsVO.getStatusMessage().append(" -Downloading DSSAT CROP FILES&lt;/br&gt;"));
 			simulationHelper.setSimulationStatus(simId, "Downloading DSSAT CROP FILES", DateUtil.getCurrentDateWithLocalTimeZone());
-			if (Crop.equalsIgnoreCase("Sorghum"))
+			String crop = simulationArguments.getCrop();
+			if (crop .equalsIgnoreCase("Sorghum"))
 			{
 				modelINP.WriteInputFiles(filePath, "SGCER040.CUL");
 				modelINP.WriteInputFiles(filePath, "SGCER040.ECO");
 				modelINP.WriteInputFiles(filePath, "SGCER040.SPE");
 				modelINP.WriteInputFiles(filePath, "DSSAT40_Sorghum.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Maize"))
+			else if (crop.equalsIgnoreCase("Maize"))
 			{
 				modelINP.WriteInputFiles(filePath, "MZCER.CUL");
 				modelINP.WriteInputFiles(filePath, "MZCER.ECO");
 				modelINP.WriteInputFiles(filePath, "MZCER.SPE");
 				modelINP.WriteInputFiles(filePath, "DSSAT40_Maize.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Wheat"))
+			else if (crop.equalsIgnoreCase("Wheat"))
 			{
 				modelINP.WriteInputFiles(filePath, "DSSAT40_wheat.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Rice"))
+			else if (crop.equalsIgnoreCase("Rice"))
 			{
 				modelINP.WriteInputFiles(filePath, "DSSAT40_rice.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Maize"))
+			else if (crop.equalsIgnoreCase("Maize"))
 			{
 				modelINP.WriteInputFiles(filePath, "MZCER.CUL");
 				modelINP.WriteInputFiles(filePath, "MZCER.ECO");
 				modelINP.WriteInputFiles(filePath, "MZCER.SPE");
 				modelINP.WriteInputFiles(filePath, "DSSAT40_Maize.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Millet"))
+			else if (crop.equalsIgnoreCase("Millet"))
 			{
 				modelINP.WriteInputFiles(filePath, "DSSAT40_millet.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Barley"))
+			else if (crop.equalsIgnoreCase("Barley"))
 			{
 				modelINP.WriteInputFiles(filePath, "DSSAT40_barley.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Bajra"))
+			else if (crop.equalsIgnoreCase("Bajra"))
 			{
 				modelINP.WriteInputFiles(filePath, "DSSAT40_bajra.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Peanut"))
+			else if (crop.equalsIgnoreCase("Peanut"))
 			{
 				modelINP.WriteInputFiles(filePath, "DSSAT40_peanut.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Sugarcane"))
+			else if (crop.equalsIgnoreCase("Sugarcane"))
 			{
 				modelINP.WriteInputFiles(filePath, "DSSAT40_sugarcane.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Soyabean"))
+			else if (crop.equalsIgnoreCase("Soyabean"))
 			{
 				modelINP.WriteInputFiles(filePath, "DSSAT40_Soyabean.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Soyabean"))
+			else if (crop.equalsIgnoreCase("Cabbage"))
 			{
 				modelINP.WriteInputFiles(filePath, "DSSAT40_Cabbage.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Chickpea"))
+			else if (crop.equalsIgnoreCase("Chickpea"))
 			{
 				modelINP.WriteInputFiles(filePath, "DSSAT40_chickpea.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Pineapple"))
+			else if (crop.equalsIgnoreCase("Pineapple"))
 			{
 				modelINP.WriteInputFiles(filePath, "DSSAT40_pineapple.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Potato"))
+			else if (crop.equalsIgnoreCase("Potato"))
 			{
 				modelINP.WriteInputFiles(filePath, "DSSAT40_potato.INP");
 			}
-			else if (Crop.equalsIgnoreCase("GreenBean"))
+			else if (crop.equalsIgnoreCase("GreenBean"))
 			{
 				modelINP.WriteInputFiles(filePath, "DSSAT40_greenbean.INP");
 			}
-			else if (Crop.equalsIgnoreCase("Cotton"))
+			else if (crop.equalsIgnoreCase("Cotton"))
 			{
 				modelINP.WriteInputFiles(filePath, "DSSAT40_cotton.INP");
 			}
-			else if (Crop.equalsIgnoreCase("CowPea"))
+			else if (crop.equalsIgnoreCase("CowPea"))
 			{
 				modelINP.WriteInputFiles(filePath, "DSSAT40_cowpea.INP");
 			}
-			else if (Crop.equalsIgnoreCase("DryBean"))
+			else if (crop.equalsIgnoreCase("DryBean"))
 			{
 				modelINP.WriteInputFiles(filePath, "DSSAT40_drybean.INP");
 			}

@@ -4,7 +4,7 @@ body {
 	font-size: 75%;
 	background-image:url('../image/crop_background.jpg');
 	background-repeat:repeat-x;
-	background-color:#EBF3E8;
+	/*background-color:#EBF3E8;*/
 	margin:0px 0px; padding:0px;
 /*	text-align:center; */
 }
@@ -55,7 +55,8 @@ label {
 
 .roundedDiv{
 	padding:5px;
-	background:#EBF3E8;
+	/*background:#EBF3E8;*/
+	background:#fff;
 	border-top-left-radius:2em;
 	border-top-right-radius:2em;
 	border-bottom-left-radius:2em;

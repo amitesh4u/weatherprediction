@@ -16,7 +16,7 @@ import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 import ucar.nc2.dataset.NetcdfDataset;
 
-public class ReadNHMMOutput<CropSimulation2> {
+public class ReadNHMMOutput {
 	public ReadNHMMOutput(){}
 	
 	public Vector ReadCDFFile(String folderPath2,String file)
@@ -44,16 +44,18 @@ public class ReadNHMMOutput<CropSimulation2> {
 	}
 	
 	//public void makeCropInputFiles(String folderPath2,double Lat,double Lon)
-	public void makeCropInputFiles(String pathname,String DistrictID, String Crop)
+	public void makeCropInputFiles(final SimulationArguments simulationArguments)
 	{
+		String crop = simulationArguments.getCrop();
 		/*Get the rainfall co-ordinates for the dataset */
 		GridCoordinates grid = new GridCoordinates();
-	    String folderPath = "Data" + "/" + pathname;
+	    //String folderPath = "Data" + "/" + pathname;
 		//String folderPath = "Data" + "/" + "2011-07-12";
 		//String folderPath2 = folderPath + "/461/";
-		String folderPath2 = folderPath + "/"+DistrictID+"/";
+		String districtID = simulationArguments.getDistrictID();
+		String folderPath = simulationArguments.getFileStructure() + File.separator + districtID + File.separator;
 		//System.out.println(folderPath2);
-		Vector vec = grid.Coordinates(folderPath2);
+		Vector vec = grid.Coordinates(folderPath);
 		Vector TminNR = new Vector();
 		Vector TminR = new Vector();
 		Vector TmaxNR = new Vector();
@@ -72,12 +74,12 @@ public class ReadNHMMOutput<CropSimulation2> {
 			Vector vGridParams = new Vector();
 			Lon = Double.parseDouble(vec.get(d).toString());
 			Lat = Double.parseDouble(vec.get(d+1).toString());
-			TminNR = ReadCDFFile(folderPath2,"TminNR"+vec.get(d+1).toString()+"-"+vec.get(d).toString()+".tsv");
-			TminR = ReadCDFFile(folderPath2,"TminR"+vec.get(d+1).toString()+"-"+vec.get(d).toString()+".tsv");
-			TmaxNR = ReadCDFFile(folderPath2,"TmaxNR"+vec.get(d+1).toString()+"-"+vec.get(d).toString()+".tsv");
-			TmaxR = ReadCDFFile(folderPath2,"TmaxR"+vec.get(d+1).toString()+"-"+vec.get(d).toString()+".tsv");
-			SRadR = ReadCDFFile(folderPath2,"SRadR"+vec.get(d+1).toString()+"-"+vec.get(d).toString()+".tsv");
-			SRadNR = ReadCDFFile(folderPath2,"SRadNR"+vec.get(d+1).toString()+"-"+vec.get(d).toString()+".tsv");
+			TminNR = ReadCDFFile(folderPath,"TminNR"+vec.get(d+1).toString()+"-"+vec.get(d).toString()+".tsv");
+			TminR = ReadCDFFile(folderPath,"TminR"+vec.get(d+1).toString()+"-"+vec.get(d).toString()+".tsv");
+			TmaxNR = ReadCDFFile(folderPath,"TmaxNR"+vec.get(d+1).toString()+"-"+vec.get(d).toString()+".tsv");
+			TmaxR = ReadCDFFile(folderPath,"TmaxR"+vec.get(d+1).toString()+"-"+vec.get(d).toString()+".tsv");
+			SRadR = ReadCDFFile(folderPath,"SRadR"+vec.get(d+1).toString()+"-"+vec.get(d).toString()+".tsv");
+			SRadNR = ReadCDFFile(folderPath,"SRadNR"+vec.get(d+1).toString()+"-"+vec.get(d).toString()+".tsv");
 			
 			vGridParams.add(TminNR);
 			vGridParams.add(TminR);
@@ -90,13 +92,13 @@ public class ReadNHMMOutput<CropSimulation2> {
 			d++;			
 			
 		}
-		File aFile = new File(folderPath2 + "/HMM_sim_nhmm_ind.txt");
+		File aFile = new File(folderPath + "HMM_sim_nhmm_ind.txt");
 		int pointer = vGrid.size();
 	    try {
 	      BufferedReader input =  new BufferedReader(new FileReader(aFile));
 	    //Get the number of soils in the region
 	      	Soil sol = new Soil();
-	      	vSoilType = (Vector)sol.NumberofSoils(folderPath2);
+	      	vSoilType = (Vector)sol.NumberofSoils(folderPath);
 	      	vSoil = Integer.parseInt(vSoilType.get(0).toString()); 
 	      	
 	      	//System.out.println(vSoil);	        
@@ -198,11 +200,11 @@ public class ReadNHMMOutput<CropSimulation2> {
 
 		    		}
 		    		
-			    		String filename = folderPath2 +"/Mo-";
+			    		String filename = folderPath +"/Mo-";
 			            //String WeatherFileName = "Mo-"+vLat+"-"+vLon+"-"+i+".WTH";
 			        	String WeatherFileName = iPointer+"-"+i+".WTH";
 			    	    //File writeFile = new File(folderPath2 +"/Mo-"+vLat+"-"+vLon+"-"+i+".WTH");
-			        	File writeFile = new File(folderPath2 +"/"+WeatherFileName);
+			        	File writeFile = new File(folderPath +"/"+WeatherFileName);
 			        	Writer output = new BufferedWriter(new FileWriter(writeFile));
 					    output.write("*WEATHER DATA : Tonk,Rajasthan,India");  
 					    output.write("\n");
@@ -225,11 +227,11 @@ public class ReadNHMMOutput<CropSimulation2> {
 			    	    Vector vSoilSimulation = new Vector();
 			    	    for(int iSoil = 0; iSoil <vSoil;iSoil++)
 			   	    	{
-				    	   String Soil = sol.GetSoilByID(folderPath2, vSoilType.get(iSoil + 1).toString()); //FIXME [Amitesh] - Added folderPath2 
+				    	   String Soil = sol.GetSoilByID(folderPath, vSoilType.get(iSoil + 1).toString()); //FIXME [Amitesh] - Added folderPath2 
 				    	   
 				    	   //System.out.println(vSoilType.get(iSoil + 1).toString());
 				    	   if(!Soil.equals(""))
-								rds.WriteCropInput(Soil, folderPath2, vLat, vLon, i,WeatherFileName,year,century,Crop);
+								rds.WriteCropInput(Soil, folderPath, vLat, vLon, i,WeatherFileName,year,century,crop);
 				    	  //convert the soil in a smaller format to be read by the cropmodel
 				    	  if (Soil.equals("Silty Clay")) Soil = "SiltyClay";
 						  else if (Soil.equals("Sandy Clay")) Soil = "SandyClay";
@@ -241,10 +243,13 @@ public class ReadNHMMOutput<CropSimulation2> {
 						  else if (Soil.equals("Loamy Sand")) Soil = "LoamySand";					
 						
 							    	   
-				    	  String InputCropModel = "Mo-"+vLat+"-"+vLon+"-"+i+"-"+Soil+".INP";
+				    	  String inputCropModel = "Mo-"+vLat+"-"+vLon+"-"+i+"-"+Soil+".INP";
 				    	  /*Call the Simulation of the crop model*/
 				    	  SimulateCrops sim = new SimulateCrops();
-				    	  vSoilSimulation.add(sim.CallCropModel(InputCropModel,pathname,DistrictID,Crop));
+				    	  //vSoilSimulation.add(sim.CallCropModel(InputCropModel,pathname,districtID,crop));
+				    	  String callCropModel = sim.callCropModel(inputCropModel, folderPath);
+				    	  System.out.println(callCropModel);
+				    	  vSoilSimulation.add(callCropModel);
 			   	    	}//end of the soil loop
 			    	vCropSimulation.add(vSoilSimulation);
 	        }//end of the year loop
@@ -258,7 +263,7 @@ public class ReadNHMMOutput<CropSimulation2> {
 	      
 	       System.out.println("GridPoint\tSimulation\tYear\tSoil\tCropOutput"); 
 	       //String pathname = "Data/2011-07-12/461/";
-	       File writeFile = new File(folderPath2+"SimulationResults.tsv");
+	       File writeFile = new File(folderPath+"SimulationResults.tsv");
 	       Writer output = new BufferedWriter(new FileWriter(writeFile));
 	       
 	       for(int i =0; i < vGridSimulations.size();i++)

@@ -3,15 +3,9 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.opendap.poc.DODS;
+import com.opendap.poc.SimulationConstants;
 import com.rii.wp.controller.CropModelController;
 import com.rii.wp.model.CropModel;
 import com.rii.wp.model.SimDetailsVO;
@@ -44,15 +38,15 @@ public class CallDODS implements Runnable {
 	    try {
 	    	dods.buildDODS(cropModel, simulation, simulationHelper);
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 			logger.error("Error in Simulation " + simulation.getSimId() + ": {}, {}",e.getMessage(), e.getCause());
 			
 			Date currentDateWithLocalTimeZone = DateUtil.getCurrentDateWithLocalTimeZone();
-			simulationHelper.updateSimulationDetails(simulation.getSimId(), "failed", null, "Message:" + e.getMessage() + ", Cause:" + e.getCause(), currentDateWithLocalTimeZone, currentDateWithLocalTimeZone);
+			simulationHelper.updateSimulationDetails(simulation.getSimId(), SimulationConstants.SIMULATION_STATUS_FAILED, null, "Message:" + e.getMessage() + ", Cause:" + e.getCause(), currentDateWithLocalTimeZone, currentDateWithLocalTimeZone);
 			
 			SimDetailsVO simDetailsVO = CropModelController.getSimDetailsMap().get(simulation.getSimId());
 			if(simDetailsVO != null){
-				simDetailsVO.setStatus("FAILED");
+				simDetailsVO.setStatus(SimulationConstants.SIMULATION_STATUS_FAILED);
 				simDetailsVO.setStatusMessage(simDetailsVO.getStatusMessage().append("Simulation Failed. Please try again: " + e.getMessage()));
 				
 				CropModelController.getSimDetailsMap().put(simulation.getSimId(), simDetailsVO);

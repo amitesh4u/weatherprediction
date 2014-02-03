@@ -7,9 +7,9 @@
 		<!-- property name="driverClassName" value="com.mysql.jdbc.Driver" /-->
 		<!-- property name="url" value="jdbc:mysql://192.168.10.13:3306/anky" /-->
 		<property name="driverClassName" value="org.postgresql.Driver" />
-        <property name="url" value="jdbc:postgresql://irione:5432/arindam" />
-        <property name="username" value="arindam" />
-		<property name="password" value="xi-ty-wa" />
+        <property name="url" value="jdbc:postgresql://localhost:5432/weatherprediction" />
+        <property name="username" value="weatherprediction" />
+		<property name="password" value="wp_db_pwd" />
 	</bean>
 
 </beans>

@@ -30,6 +30,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.opendap.poc.SimulationConstants;
 import com.rii.wp.dao.SimulationDAO;
 import com.rii.wp.model.CropModel;
 import com.rii.wp.model.SimDetailsVO;
@@ -148,7 +149,7 @@ public class CropModelController {
     		        Date startDateTime = DateUtil.getCurrentDateWithLocalTimeZone();
     		        simulation.setStartDate(startDateTime);
     		        simulation.setStartedOn(startDateTime);
-    		        simulation.setStatus("In Process");
+    		        simulation.setStatus(SimulationConstants.SIMULATION_STATUS_INPROGRESS);
     		        simulation = simulationDAO.setSimulationDetails(simulation);
     		        if(simulation.getSimId() == 0){
     		        	throw new Exception("Error inserting Simulation details");
@@ -156,7 +157,7 @@ public class CropModelController {
     		        
     		        // 5. Create Simulation Status Object and store in DB
     		        logger.info("Create Simulation Status Object and store in DB");
-    		        simulationHelper.setSimulationStatus(simulation.getSimId(), "Initiated", startDateTime);
+    		        simulationHelper.setSimulationStatus(simulation.getSimId(), SimulationConstants.SIMULATION_STATUS_INITIATED, startDateTime);
     		        
     		        // 6. Run the simulation in a Thread
     		        logger.info("Run the simulation in a Thread");
@@ -202,7 +203,7 @@ public class CropModelController {
 	    			StringBuilder responseVal = new StringBuilder();
 	    			
 	    			List<Simulation> simulationDetailsByUser = simulationDAO.getSimulationDetailsByUser(Long.valueOf((String)session.getAttribute("userId")), 
-	    					DateUtil.getNthDateWithLocalTimeZone(6),DateUtil.getCurrentDateWithLocalTimeZone(), 5);
+	    					DateUtil.getNthDateWithLocalTimeZone(364),DateUtil.getCurrentDateWithLocalTimeZone(), 5);
 	    			
 	    			StringBuilder sb = new StringBuilder(
 	    					"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><simulationReport>");
@@ -214,6 +215,7 @@ public class CropModelController {
 	    				sb.append("<num>" + simulation.getSimNum() + "</num>");
 	    				sb.append("<type>" + simulation.getSimDesc() + "</type>");
 	    				sb.append("<status>" + simulation.getStatus() + "</status>");
+	    				sb.append("<input>" + simulation.getInputParam() + "</input>");
 	    				sb.append("<links>");
 	    				
 	    				if(StringUtils.hasText(simulation.getOutput())){
@@ -253,12 +255,5 @@ public class CropModelController {
 	public static Map<Long, SimDetailsVO> getSimDetailsMap() {
 		return simDetailsMap;
 	}
-
-//	/**
-//	 * @param simDetailsMap the simDetailsMap to set
-//	 */
-//	public static void setSimDetailsMap(Map<Long, SimDetailsVO> simDetailsMap) {
-//		CropModelController.simDetailsMap = simDetailsMap;
-//	}
 	
 }

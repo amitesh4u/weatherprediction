@@ -156,6 +156,8 @@
 	    checkSimulationReport();
 	});
 	
+	
+	
 
 	//]]>
 </script>
@@ -164,16 +166,16 @@
 <body>
 	<div style="height: 10px"></div>
 	<div class="roundedDiv">
-		<font size="3em" style="font-weight: bold" color="blue">Welcome
+		<font size="2em" style="font-weight: bold" color="#3E3EFF">Welcome
 			${fName} ${lName}!</font> | <a href="Logout">Logout</a> <img
-			src="<c:url value="/static/images/spacer.gif"/>" width="250px"
+			src="<c:url value="/static/images/spacer.gif"/>" width="350px"
 			height="1px" /> <font size="3em" style="font-weight: bold"
 			color="green">Crop Model Simulation</font>
 	</div>
 	<div style="height: 10px"></div>
-	<div id="container" style="min-width: 1024px; height: 510px;width:100%">
+	<div id="container" style="min-width: 1280px; height: 450px;width:100%">
 		<div id="left" class="roundedDiv"
-			style="float: left; min-width: 460px; width=100%; padding: 0px; margin-left: 5px">
+			style="float: left; min-width: 660px; width=100%; padding: 0px; margin-left: 5px">
 			<form method="post" action="CropModel" name="DODSForm">
 				<ul style='list-style-type: none;margin-left:-10px'>
 					<li><label><font size="3em" style="font-weight: bold"
@@ -291,52 +293,49 @@
 						href="javascript:openWin('static/jsp/NHMMInputSeeds.jsp', 'NHMM Input Seeds');">
 							NHMM Input seeds</a>
 						<div style="display: none" id="nhmmInputSeedsParamVal"></div> <img
-						src="<c:url value="/static/images/spacer.gif"/>" width="10px"
+						src="<c:url value="/static/images/spacer.gif"/>" width="5px"
 						height="1px" /> <a
 						href="javascript:openWin('static/jsp/gpparam.jsp', 'Genetic Parameters');">
 							Genetic Parameters</a>
-						<div style="display: none" id="gpParamVal"></div></li>
-					<li><div style="height: 10px"></div></li>
-					<li><img src="<c:url value="/static/images/spacer.gif"/>" width="50px"
+						<div style="display: none" id="gpParamVal"></div>
+						<img src="<c:url value="/static/images/spacer.gif"/>" width="5px"
 						height="1px" /><a
 						href="javascript:openWin('static/jsp/planting.jsp', 'Planting Details');">
-						Planting Details</a>
+						Planting</a>
 						<div style="display: none" id="pdParamVal"></div> <!-- input name= "pdiParamVal" id="pdiParamVal" type="hidden" value="" /-->
-						<img src="<c:url value="/static/images/spacer.gif"/>" width="10px"
+						<img src="<c:url value="/static/images/spacer.gif"/>" width="5px"
 						height="1px" /> <a
 						href="javascript:openWin('static/jsp/irrigation.jsp', 'Irrigation Details');">
-							Irrigation Details</a>
+							Irrigation</a>
 						<div style="display: none" id="idParamVal"></div> <img
-						src="<c:url value="/static/images/spacer.gif"/>" width="10px"
+						src="<c:url value="/static/images/spacer.gif"/>" width="5px"
 						height="1px" /> <a
 						href="javascript:openWin('static/jsp/fertilizer.jsp', 'Fertilizer Details');">
-							Fertilizer Details</a>
+							Fertilizer</a>
 						<div style="display: none" id="fdParamVal"></div></li>
 					<li><input type="hidden" id="simulationType"
 						name="simulationType" value="cmh" /></li>
 					<li><div style="height: 15px"></div></li>
-					<li><input type="radio" name="addinp" value="formhub"><font size="3em" style="font-weight:bold;color:#F65327;font-family:Georgia">Formhub url: </font>
+					<li><input type="radio" name="addinp" value="formhub"><font size="2em" style="font-weight:bold;color:#F65327;font-family:Georgia">Formhub url: </font>
 					<input type="text" id="formHub" value="" size="40" /></li>
 					<li><div style="height: 20px"></div></li>
-					<li><font size="3em" color="green" style="font-weight: bold">Run
+					<li><font size="2em" color="green" style="font-weight: bold">Run
 							Simulation:</font><br />
-						<ul>
-							<li><input style="font-size: 1em" type="button" id="cmhBtn"
+							<input style="font-size: 1em" type="button" id="cmhBtn"
 								value="Crop Model (Historical Yield)"
-								onClick="runSimulation('cmh')" /><br />
-							<li><input style="font-size: 1em" type="button"
+								onClick="runSimulation('cmh')" />
+							<input style="font-size: 1em" type="button"
 								id="cmnhmmBtn" value="Crop Model (NHMM Predictions)"
-								onClick="runSimulation('cmnhmm')" /><br />
-							<li><input style="font-size: 1em" type="button"
+								onClick="runSimulation('cmnhmm')" />
+							<input style="font-size: 1em" type="button"
 								id="rmnhmmBtn" value="RainFall Model (NHMM predictions)"
-								onClick="runSimulation('rmnhmm')" /> <!-- 				<input type="submit" value="Submit"/> -->
-								<!-- 				<input type="reset" value="Reset"> -->
-						</ul></li>
+								onClick="runSimulation('rmnhmm')" />
+					</li>
 				</ul>
 			</form>
 		</div>
 		<div id="right" class="roundedDiv"
-			style="float: right; padding: 0px; margin-right: 5px;min-width: 550px;">
+			style="float: right; padding: 0px; margin-right: 5px;min-width:620px;">
 			<form method="post" action="SimulationReport" name="SimReportForm">
 				<ul style='list-style-type: none;'>
 					<li><label><font size="3em" style="font-weight: bold"
@@ -358,7 +357,7 @@
 						predictions)</b></a></li>
 		</ul>
 		<div id="cmh">
-			<h2>Simulation Status</h2>
+			<font size="3em" style="font-weight: bold" color="green">Simulation Status</font>
 			<input id="cmhSimId" type="hidden" value="0" />
 			<input id="cmhSimNum" type="hidden" value="0" />
 
@@ -380,7 +379,7 @@
 			<div id="cmhSimOutput" style="display: block"></div>
 		</div>
 		<div id="cmnhmm">
-			<h2>Simulation Status</h2>
+			<font size="3em" style="font-weight: bold" color="green">Simulation Status</font>
 			<input id="cmnhmmSimId" type="hidden" value="0" />
 			<input id="cmnhmmSimNum" type="hidden" value="0" />
 
@@ -401,7 +400,7 @@
 			<div id="cmnhmmSimOutput" style="display: block"></div>
 		</div>
 		<div id="rmnhmm">
-			<h2>Simulation Status</h2>
+			<font size="3em" style="font-weight: bold" color="green">Simulation Status</font>
 			<input id="rmnhmmSimId" type="hidden" value="0" />
 			<input id="rmnhmmSimNum" type="hidden" value="0" />
 

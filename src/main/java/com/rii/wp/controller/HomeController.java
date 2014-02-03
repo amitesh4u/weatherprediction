@@ -1,9 +1,5 @@
 package com.rii.wp.controller;
 
-import java.text.DateFormat;
-import java.util.Date;
-//import java.util.Locale;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -50,34 +46,9 @@ public class HomeController {
 	    	boolean isLoggedIn = (Boolean) session.getAttribute("is_logged_in");
 	    	logger.info("isLoggedIn {}",  isLoggedIn);
 	    	if(isLoggedIn){
-	    		// user is logged in
-//	    		logger.info("Welcome home! The client locale is {}.", request.getLocale());
-//	    		
-//	    		Date date = new Date();
-//	    		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, request.getLocale());
-//	    		
-//	    		String formattedDate = dateFormat.format(date);
-//	    		
-//	    		request.setAttribute("serverTime", formattedDate );
-//	    		
 	    		return "cropmodel";
 	    	}
 	    }
-	    
-//	    if (request.isRequestedSessionIdValid()) {
-//	        // user is logged in
-//		    logger.info("Welcome home! The client locale is {}.", request.getLocale());
-//			
-//			Date date = new Date();
-//			DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, request.getLocale());
-//			
-//			String formattedDate = dateFormat.format(date);
-//			
-//			request.setAttribute("serverTime", formattedDate );
-//			
-//			return "home";
-//	    }
-		
 	    return "login";
 	}
 	

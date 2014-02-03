@@ -31,7 +31,7 @@ import java.io.IOException;
 
 public class WriteNetCDF_2 {
 	/**********************This method returns the unique values *****************/
-	public Vector UniqueValue(Vector vec)
+	public Vector uniqueValue(Vector vec)
 	{
 		Vector uniqueVals = new Vector();
 		
@@ -76,11 +76,11 @@ public class WriteNetCDF_2 {
 		 
 		 WriteNetCDF unique = new WriteNetCDF();
 		 /*Find the unique values of dataset*/
-		 Vector uLat = unique.UniqueValue(vLat);
-		 Vector uLon = unique.UniqueValue(vLon);
-		 Vector uGridPoints = unique.UniqueValue(vGridPoints);
-		 Vector uYear = unique.UniqueValue(vYear);
-		 Vector uSoil = unique.UniqueValue(vSoil);
+		 Vector uLat = unique.uniqueValue(vLat);
+		 Vector uLon = unique.uniqueValue(vLon);
+		 Vector uGridPoints = unique.uniqueValue(vGridPoints);
+		 Vector uYear = unique.uniqueValue(vYear);
+		 Vector uSoil = unique.uniqueValue(vSoil);
 		 //Vector uCropOutput = unique.UniqueValue(vCropOutput);
 	
 		 for (int k = 0; k < uSoil.size(); k++){
